@@ -4,27 +4,37 @@ import os, json
 
 load_dotenv()
 
-with open("../data/sample_user.json", "r") as file:
-    user_profile = json.load(file)
 
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
-response = client.models.generate_content(
-    model="gemini-3.5-flash",
-    contents=f"""
-Recommend one successful entrepreneur for someone with:
+def choose_person(user_profile):
+    response = client.models.generate_content(
+        model="gemini-3.5-flash",
+        contents=f"""
+    Recommend one successful entrepreneur for someone with:
 
-Occupation:
-{user_profile['occupation']}
+    Occupation:
+    {user_profile['occupation']}
 
-Goals:
-{', '.join(user_profile['goals'])}
+    Goals:
+    {', '.join(user_profile['goals'])}
 
-Interests:
-{', '.join(user_profile['interests'])}
+    Interests:
+    {', '.join(user_profile['interests'])}
 
-Return only the person's name and a short explanation.
-"""
-)
+    Return ONLY valid JSON.
 
-print(response.text)
+    The JSON must have exactly this format:
+
+    {{
+        "name": "",
+        "reason": ""
+    }}
+
+    Do not use markdown.
+    Do not wrap the JSON in triple backticks.
+    Do not include any extra text.
+    """
+    )
+
+    return json.loads(response.text)
