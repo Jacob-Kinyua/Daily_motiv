@@ -1,15 +1,15 @@
-project/
+backend/
 │
 ├── prompts/
+│     ai_client.py
 │     choose_person.py
 │     research_person.py
 │     score_person.py
-│     generate_lessons.py
-│     ai_client.py
-│     recommendation_engine.py
+│     curate_response.py
 │
-├── database/
+├── data/
 │     models.py
+|     sample_user.json
 │
 ├── api/
 │     (empty for now)

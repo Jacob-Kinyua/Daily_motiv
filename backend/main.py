@@ -3,7 +3,7 @@ import json
 
 from prompts.find_person import choose_person
 from prompts.research_person import research_person
-from prompts.scorer import score_person
+from Daily_motiv.backend.prompts.score_person import score_person
 
 AVAILABLE_TAGS = [
     "Leadership",
