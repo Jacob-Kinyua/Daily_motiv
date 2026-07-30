@@ -1,5 +1,5 @@
 from .ai_client import generate_json
-from .models import ResearchResponse
+from data.models import ResearchResponse
 
 
 

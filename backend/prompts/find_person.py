@@ -1,5 +1,5 @@
 from .ai_client import generate_json
-from .models import Person
+from data.models import Person
 
 
 def choose_person(user_profile):
