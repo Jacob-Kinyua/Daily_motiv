@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from enum import Enum
 
 class Person(BaseModel):
     name: str
@@ -16,3 +17,11 @@ class ResearchResponse(BaseModel):
     fun_fact: str
     lessons: list[Lesson]
     book_recommendation: BookRecommendation
+
+class TagScore(BaseModel):
+    tag: str
+    score: int
+    reason: str
+
+class ScoreResponse(BaseModel):
+    tag_scores: list[TagScore]

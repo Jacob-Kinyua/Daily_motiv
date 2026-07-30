@@ -3,7 +3,20 @@ import json
 
 from prompts.find_person import choose_person
 from prompts.research_person import research_person
-# from prompts.research_person import research_person
+from prompts.scorer import score_person
+
+AVAILABLE_TAGS = [
+    "Leadership",
+    "Entrepreneurship",
+    "Artificial Intelligence",
+    "Software Engineering",
+    "Product Development",
+    "Investing & Finance",
+    "Marketing & Sales",
+    "Personal Development",
+    "Innovation",
+    "Career Growth"
+]
 
 with open("data/sample_user.json", "r") as file:
     user_profile = json.load(file)
@@ -14,13 +27,14 @@ person = choose_person(user_profile)
 print(person.name)
 print(person.reason)
 
-recommendations = research_person(person, user_profile["interests"])
+person_details = research_person(person, AVAILABLE_TAGS)
+print(person_details.fun_fact)
 
-print(recommendations.fun_fact)
-
-for lesson in recommendations.lessons:
+for lesson in person_details.lessons:
     print(lesson.lesson)
     print(lesson.tags)
 
-print(recommendations.book_recommendation.title)
-print(recommendations.book_recommendation.author)
+print(person_details.book_recommendation.title)
+print(person_details.book_recommendation.author)
+
+person_score = score_person(person, AVAILABLE_TAGS)
