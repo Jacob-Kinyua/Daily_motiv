@@ -17,3 +17,4 @@ def choose_person(user_profile):
     """
 
     return generate_json(prompt, Person)
+

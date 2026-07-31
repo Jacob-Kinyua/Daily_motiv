@@ -25,3 +25,9 @@ class TagScore(BaseModel):
 
 class ScoreResponse(BaseModel):
     tag_scores: list[TagScore]
+
+
+class UserResponse(BaseModel):
+    subject: str
+    body: str
+    

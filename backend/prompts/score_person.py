@@ -21,3 +21,4 @@ def score_person(target_person, tags):
     """
 
     return generate_json(prompt, ScoreResponse)
+

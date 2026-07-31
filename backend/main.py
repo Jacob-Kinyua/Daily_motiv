@@ -3,7 +3,8 @@ import json
 
 from prompts.find_person import choose_person
 from prompts.research_person import research_person
-from Daily_motiv.backend.prompts.score_person import score_person
+from prompts.score_person import score_person
+from prompts.curate_response import curate_response
 
 AVAILABLE_TAGS = [
     "Leadership",
@@ -38,3 +39,8 @@ print(person_details.book_recommendation.title)
 print(person_details.book_recommendation.author)
 
 person_score = score_person(person, AVAILABLE_TAGS)
+print(person_score.tag_scores)
+
+curated_response = curate_response(user_profile, person, person_details)
+print(curated_response.subject)
+print(curated_response.body)
