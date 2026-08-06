@@ -20,4 +20,8 @@ class RoleModel(Base):
 
     fun_fact: Mapped[str] = mapped_column(String(200))
 
+    lessons: Mapped[list["Lesson"]] = relationship(
+        back_populates="role_model"
+    )
+
     
