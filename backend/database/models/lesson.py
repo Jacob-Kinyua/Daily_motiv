@@ -18,7 +18,7 @@ class Lesson(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    lesson: Mapped[str] 
+    lesson: Mapped[str] = mapped_column(String(500))
 
     role_model_id: Mapped[int] = mapped_column(
         ForeignKey("role_models.id")

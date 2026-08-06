@@ -1,7 +1,0 @@
-
-
-"""
-    Columns:
-        name
-        reason
-"""

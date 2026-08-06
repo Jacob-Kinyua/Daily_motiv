@@ -24,3 +24,7 @@ class User(Base):
     goals: Mapped[list[str]] = mapped_column(JSON)
 
     interests: Mapped[list[str]] = mapped_column(JSON)
+
+    recommendations: Mapped[list["Recommendation"]] = relationship(
+        back_populates="user"
+    )

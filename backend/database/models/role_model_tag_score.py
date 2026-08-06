@@ -27,14 +27,14 @@ class RoleModelTagScore(Base):
         primary_key=True
     )
 
-    score: Mapped[int]
+    score: Mapped[int] = mapped_column()
 
-    reason: Mapped[str]
+    reason: Mapped[str] = mapped_column(String(300))
 
     role_model: Mapped["RoleModel"] = relationship(
         back_populates="tag_scores"
     )
 
     tag: Mapped["Tag"] = relationship(
-        back_populates="role_models"
+        back_populates="role_model_scores"
     )

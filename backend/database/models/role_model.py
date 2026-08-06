@@ -28,4 +28,8 @@ class RoleModel(Base):
         back_populates="role_model",
         uselist=False
     )
-    
+
+    recommendations: Mapped[list["Recommendation"]] = relationship(
+        back_populates="role_model"
+    )
+        
