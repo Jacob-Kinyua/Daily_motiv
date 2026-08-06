@@ -3,7 +3,7 @@
 """
     Columns:
         tag_id
-        person_id
+        role_model_id
         score
         reason
 """

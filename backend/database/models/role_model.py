@@ -24,4 +24,8 @@ class RoleModel(Base):
         back_populates="role_model"
     )
 
+    book: Mapped["Book"] = relationship(
+        back_populates="role_model",
+        uselist=False
+    )
     
