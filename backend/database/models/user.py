@@ -21,6 +21,12 @@ class User(Base):
 
     occupation: Mapped[str] = mapped_column(String(100))
 
+    email: Mapped[str] = mapped_column(
+        String(255),
+        unique=True,
+        index=True
+    )
+
     goals: Mapped[list[str]] = mapped_column(JSON)
 
     interests: Mapped[list[str]] = mapped_column(JSON)
