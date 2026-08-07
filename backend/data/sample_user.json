@@ -1,4 +1,6 @@
 {
+    "name": "Jane Doe",
+    "email": "jane_doe@gmail.com",
     "occupation": "Software Engineer",
     "career_stage": "Mid-level",
     "goals": [
@@ -9,9 +11,5 @@
         "Artificial Intelligence",
         "Leadership",
         "Entrepreneurship"
-    ],
-    "hobbies": [
-        "Reading",
-        "Chess"
     ]
 }

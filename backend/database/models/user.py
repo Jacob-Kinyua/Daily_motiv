@@ -21,6 +21,8 @@ class User(Base):
 
     occupation: Mapped[str] = mapped_column(String(100))
 
+    career_stage: Mapped[str] = mapped_column(String(100))
+
     email: Mapped[str] = mapped_column(
         String(255),
         unique=True,
