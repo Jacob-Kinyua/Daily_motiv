@@ -11,7 +11,7 @@
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
+from backend.database.base import Base
 
 class RoleModelTagScore(Base):
 

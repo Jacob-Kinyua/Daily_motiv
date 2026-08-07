@@ -10,7 +10,7 @@
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
+from backend.database.base import Base
 
 class Book(Base):
 

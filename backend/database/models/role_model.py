@@ -8,7 +8,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, JSON
 
-from database.base import Base
+from backend.database.base import Base
 
 class RoleModel(Base):
 

@@ -13,12 +13,22 @@ from backend.database.models.lesson_tag import LessonTag
 from backend.database.models.role_model_tag_score import RoleModelTagScore
 from backend.database.models.recommendation import Recommendation
 from backend.database.models.book import Book
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+database_url = os.getenv("DATABASE_URL")
+
+if not database_url:
+    raise RuntimeError("DATABASE_URL is not set")
+
+config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

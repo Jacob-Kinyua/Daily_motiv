@@ -17,3 +17,8 @@ backend/
 ├── tests/
 │
 └── main.py
+
+tools
+postgres
+python
+sqlalchemy
