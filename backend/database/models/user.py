@@ -6,7 +6,7 @@ Columns:
     goals
     interests
 """
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, JSON
 
 from database.base import Base
