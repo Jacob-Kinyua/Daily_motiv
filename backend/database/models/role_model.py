@@ -5,10 +5,11 @@
         name
         reason
 """
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, JSON
 
 from backend.database.base import Base
+
 
 class RoleModel(Base):
 
@@ -20,16 +21,26 @@ class RoleModel(Base):
 
     fun_fact: Mapped[str] = mapped_column(String(200))
 
+    # One RoleModel → many Lessons
     lessons: Mapped[list["Lesson"]] = relationship(
-        back_populates="role_model"
+        back_populates="role_model",
+        cascade="all, delete-orphan"
     )
 
+    # One RoleModel → one Book
     book: Mapped["Book"] = relationship(
         back_populates="role_model",
-        uselist=False
+        uselist=False,
+        cascade="all, delete-orphan"
     )
 
+    # One RoleModel → many Recommendations
     recommendations: Mapped[list["Recommendation"]] = relationship(
         back_populates="role_model"
     )
-        
+
+    # One RoleModel → many RoleModelTagScores
+    tag_scores: Mapped[list["RoleModelTagScore"]] = relationship(
+        back_populates="role_model",
+        cascade="all, delete-orphan"
+    )
