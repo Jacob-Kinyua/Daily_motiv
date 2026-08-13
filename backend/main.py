@@ -5,6 +5,7 @@ from prompts.find_person import choose_person
 from prompts.research_person import research_person
 from prompts.score_person import score_person
 from prompts.curate_response import curate_response
+from data.models import RoleModelResponse
 
 AVAILABLE_TAGS = [
     "Leadership",
@@ -40,6 +41,18 @@ print(person_details.book_recommendation.author)
 
 person_score = score_person(person, AVAILABLE_TAGS)
 print(person_score.tag_scores)
+
+
+role_model_profile = RoleModelResponse(
+    name=person.name,
+    fun_fact=person_details.fun_fact,
+    lessons=person_details.lessons,
+    book_recommendation=person_details.book_recommendation,
+    tag_scores=person_score.tag_scores
+)
+
+
+
 
 curated_response = curate_response(user_profile, person, person_details)
 print(curated_response.subject)
