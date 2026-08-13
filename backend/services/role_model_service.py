@@ -7,92 +7,85 @@ from backend.database.models.lesson_tag import LessonTag
 from backend.database.models.tag import Tag
 from backend.database.models.role_model_tag_score import RoleModelTagScore
 from backend.database.models.book import Book
+from data.models import RoleModelResponse
 
 
-def create_role_model(session: Session, role_model_profile):
+def get_or_create_tag(session: Session, tag_name: str) -> Tag:
 
-    try:
-        role_model = RoleModel(
-            name=role_model_profile["name"],
-            fun_fact=role_model_profile["fun_fact"]
-        )
+    statement = select(Tag).where(
+        Tag.name == tag_name
+    )
 
-        session.add(role_model)
+    tag = session.scalars(statement).first()
+
+    if tag is None:
+        tag = Tag(name=tag_name)
+        session.add(tag)
         session.flush()
 
-        # Book
-        book_data = role_model_profile["book_recommendation"]
+    return tag
 
-        book = Book(
-            title=book_data["title"],
-            author=book_data["author"],
+def create_role_model(session: Session, role_model_profile: RoleModelResponse) -> RoleModel:
+
+    role_model = RoleModel(
+        name=role_model_profile.name,
+        fun_fact=role_model_profile.fun_fact
+    )
+
+    session.add(role_model)
+    session.flush()
+
+    # Book
+    book = Book(
+        title=role_model_profile.book_recommendation.title,
+        author=role_model_profile.book_recommendation.author,
+        role_model_id=role_model.id
+    )
+
+    session.add(book)
+
+    # Lessons
+    for lesson_data in role_model_profile.lessons:
+
+        lesson = Lesson(
+            lesson=lesson_data.lesson,
             role_model_id=role_model.id
         )
 
-        session.add(book)
+        session.add(lesson)
+        session.flush()
 
-        # Lessons + tags
-        for lesson_data in role_model_profile["lessons"]:
+        for tag_name in lesson_data.tags:
+            tag = get_or_create_tag(session, tag_name)
 
-            lesson = Lesson(
-                lesson=lesson_data["lesson"],
-                role_model_id=role_model.id
+            lesson_tag = LessonTag(
+                lesson_id=lesson.id,
+                tag_id=tag.id
             )
 
-            session.add(lesson)
-            session.flush()
+            session.add(lesson_tag)
 
-            for tag_name in lesson_data["tags"]:
+    # Tag scores
+    for score_data in role_model_profile.tag_scores:
 
-                statement = select(Tag).where(
-                    Tag.name == tag_name
-                )
+        tag = get_or_create_tag(
+            session,
+            score_data.tag
+        )
 
-                tag = session.scalars(statement).first()
+        tag_score = RoleModelTagScore(
+            role_model_id=role_model.id,
+            tag_id=tag.id,
+            score=score_data.score,
+            reason=score_data.reason
+        )
 
-                if tag is None:
-                    tag = Tag(name=tag_name)
-                    session.add(tag)
-                    session.flush()
+        session.add(tag_score)
 
-                lesson_tag = LessonTag(
-                    lesson_id=lesson.id,
-                    tag_id=tag.id
-                )
+    session.commit()
+    session.refresh(role_model)
 
-                session.add(lesson_tag)
-
-        # Role model tag scores
-        for score_data in role_model_profile["tag_scores"]:
-
-            statement = select(Tag).where(
-                Tag.name == score_data["tag"]
-            )
-
-            tag = session.scalars(statement).first()
-
-            if tag is None:
-                tag = Tag(name=score_data["tag"])
-                session.add(tag)
-                session.flush()
-
-            tag_score = RoleModelTagScore(
-                role_model_id=role_model.id,
-                tag_id=tag.id,
-                score=score_data["score"],
-                reason=score_data["reason"]
-            )
-
-            session.add(tag_score)
-
-        session.commit()
-        session.refresh(role_model)
-
-        return role_model
-
-    except Exception:
-        session.rollback()
-        raise
+    return role_model
 
 
 def get_role_model(session: Session, role_model_id: int) -> RoleModel | None:
