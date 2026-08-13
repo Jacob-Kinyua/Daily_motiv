@@ -87,6 +87,10 @@ def create_role_model(session: Session, role_model_profile: RoleModelResponse) -
 
     return role_model
 
+def get_role_model_names(session: Session) -> list[str]:
+    statement = select(RoleModel.name)
+
+    return list(session.scalars(statement).all())
 
 def get_role_model(session: Session, role_model_id: int) -> RoleModel | None:
 

@@ -17,7 +17,11 @@ class RoleModel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    name: Mapped[str] = mapped_column(String(100))
+    name: Mapped[str] = mapped_column(
+        String(100),
+        unique=True,
+        nullable=False
+    )
 
     fun_fact: Mapped[str] = mapped_column(String(200))
 
