@@ -11,12 +11,7 @@ from backend.database.models.role_model_tag_score import RoleModelTagScore
 from .role_model_service import get_role_model
 
 
-def create_recommendation(
-    session: Session,
-    user_id: int,
-    role_model_id: int,
-    reason: str
-) -> Recommendation:
+def create_recommendation(session: Session, user_id: int, role_model_id: int, reason: str) -> Recommendation:
 
     recommendation = Recommendation(
         user_id=user_id,
@@ -32,10 +27,7 @@ def create_recommendation(
     return recommendation
 
 
-def get_user_recommendations(
-    session: Session,
-    user_id: int
-) -> list[Recommendation]:
+def get_user_recommendations(session: Session, user_id: int) -> list[Recommendation]:
 
     statement = (
         select(Recommendation)
@@ -46,6 +38,8 @@ def get_user_recommendations(
     return list(session.scalars(statement).all())
 
 
+# sums different role models score across different tags and returns 
+# them from the highest rank
 def rank_role_models(session: Session, user: User, role_models: list[RoleModel]):
     rankings = []
 
@@ -81,6 +75,7 @@ def select_role_model(ranked_role_models):
 
     return ranked_role_models[0]
 
+
 def get_unseen_role_models(session: Session, user: User) -> list[RoleModel]:
 
     seen_role_models = (
@@ -101,6 +96,7 @@ def get_unseen_role_models(session: Session, user: User) -> list[RoleModel]:
     return  list(session.scalars(statement).unique().all())
 
 
+# returns the highest ranked role model not recomended to the user yet
 def recommend_role_model(session: Session, user: User):
 
     candidates = get_unseen_role_models(session,user)
