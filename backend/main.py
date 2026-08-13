@@ -6,6 +6,7 @@ from prompts.research_person import research_person
 from prompts.score_person import score_person
 from prompts.curate_response import curate_response
 from data.models import RoleModelResponse
+from services.role_model_service import *
 
 AVAILABLE_TAGS = [
     "Leadership",
@@ -24,7 +25,9 @@ with open("data/sample_user.json", "r") as file:
     user_profile = json.load(file)
 
 
-person = choose_person(user_profile)
+existing_people = get_role_model_names()
+
+person = choose_person(user_profile, existing_people)
 
 print(person.name)
 print(person.reason)
