@@ -44,10 +44,11 @@ def curate_response(user_profile, person, research_response):
 
     Requirements: 
 
-    - Create an engaging subject line.
+    - Create an engaging subject line that is short and not promotional.
     - Write a friendly and motivational email body.
     - Explain why today's featured person is relevant.
     - Mention the interesting fact naturally.
+    - Ensure the fact is based on valid evidence and is verified.
     - Connect the provided lessons to the user's goals.
     - Use only the provided lessons and facts.
     - Do not invent new information.

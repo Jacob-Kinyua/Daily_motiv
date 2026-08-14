@@ -5,10 +5,10 @@ from prompts.find_person import choose_person
 from prompts.research_person import research_person
 from prompts.score_person import score_person
 from prompts.curate_response import curate_response
-from data.models import RoleModelResponse
-from services.role_model_service import *
-from services.user_service import *
-from services.role_model_service import *
+# from data.models import RoleModelResponse
+# from services.role_model_service import *
+# from services.user_service import *
+# from services.role_model_service import *
 from services.generate_email import *
 
 AVAILABLE_TAGS = [
@@ -58,7 +58,7 @@ print(curated_response.subject)
 print("\nEmail body:")
 print(curated_response.body)
 
-sent_email = send_email("gmail.com", curated_response.subject, curated_response.body)
+sent_email = send_email("muskins18@gmail.com", curated_response.subject, curated_response.body)
 
 if sent_email:
     print("sent email")
