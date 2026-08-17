@@ -1,5 +1,5 @@
 from .ai_client import generate_json
-from data.models import ScoreResponse
+from backend.data.models import ScoreResponse
 
 
 def score_person(target_person, tags):

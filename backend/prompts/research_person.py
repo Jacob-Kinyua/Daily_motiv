@@ -1,5 +1,5 @@
 from .ai_client import generate_json
-from data.models import ResearchResponse
+from backend.data.models import ResearchResponse
 
 
 

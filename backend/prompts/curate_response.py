@@ -1,5 +1,5 @@
 from .ai_client import generate_json
-from data.models import UserResponse
+from backend.data.models import UserResponse
 
 def curate_response(user, recommendation):
 
