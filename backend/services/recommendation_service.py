@@ -128,7 +128,12 @@ def get_unseen_role_models(session: Session, user: User) -> list[RoleModel]:
 
 
 # returns the highest ranked role model not recomended to the user yet
-def generate_recommendation(session, user):
+def generate_recommendation(session, user_id):
+
+    user = session.get(User, user_id)
+
+    if user is None:
+        return None
 
     # 1. Look for existing suitable RoleModels
     candidates = get_unseen_role_models(
@@ -146,19 +151,27 @@ def generate_recommendation(session, user):
 
         return select_role_model(ranked)
 
+    else:
     # 3. Otherwise generate a new RoleModel
-    existing_people = get_role_model_names(session)
+        existing_people = get_role_model_names(session)
 
-    role_model_profile = generate_new_role_model(
-        user,
-        existing_people
-    )
+        role_model_profile = generate_new_role_model(
+            user,
+            existing_people
+        )
 
-    # 4. Save it to database
-    role_model = create_role_model(
+        # 4. Save it to database
+        role_model = create_role_model(
+            session,
+            role_model_profile
+        )
+
+    recommendation = create_recommendation(
         session,
-        role_model_profile
+        user_id=user.id,
+        role_model_id=role_model.id,
+        reason="Recommended based on your interests."
     )
 
-    return role_model
+    return recommendation
 
