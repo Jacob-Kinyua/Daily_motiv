@@ -1,12 +1,12 @@
 from .ai_client import generate_json
 from data.models import UserResponse
 
-def curate_response(user_profile, person, research_response):
+def curate_response(user_profile, person):
     matching_lessons = [
         lesson
-        for lesson in research_response.lessons
+        for lesson in person.lessons
         if any(
-            tag in user_profile["interests"]
+            tag in user_profile.interests
             for tag in lesson.tags
         )
     ]
@@ -16,13 +16,13 @@ def curate_response(user_profile, person, research_response):
     User
 
     Occupation:
-    {user_profile["occupation"]}
+    {user_profile.occupation}
 
     Goals:
-    {", ".join(user_profile["goals"])}
+    {", ".join(user_profile.goals)}
 
     Interests:
-    {", ".join(user_profile["interests"])}
+    {", ".join(user_profile.interests)}
 
     Featured Person
 
@@ -33,13 +33,13 @@ def curate_response(user_profile, person, research_response):
     {person.reason}
 
     Interesting Fact:
-    {research_response.fun_fact}
+    {person.fun_fact}
 
     Relevant Lessons:
     {matching_lessons}
 
     Book Recommendation:
-    {research_response.book_recommendation}
+    {person.book_recommendation}
 
 
     Requirements: 

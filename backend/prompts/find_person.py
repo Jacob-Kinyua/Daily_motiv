@@ -9,13 +9,13 @@ def choose_person(user_profile, recommended):
     occupation, goals, and interests.
 
     Occupation:
-    {user_profile['occupation']}
+    {user_profile.occupation}
 
     Goals:
-    {', '.join(user_profile['goals'])}
+    {', '.join(user_profile.goals)}
 
     Interests:
-    {', '.join(user_profile['interests'])}
+    {', '.join(user_profile.interests)}
 
     People already researched:
     {recommended_people}
