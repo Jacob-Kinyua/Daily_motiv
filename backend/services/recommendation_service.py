@@ -15,6 +15,9 @@ from backend.prompts.research_person import research_person
 from backend.prompts.score_person import score_person
 from backend.data.models import RoleModelResponse
 from .role_model_service import get_role_model_names, create_role_model
+from backend.prompts.curate_response import curate_response
+from backend.services.generate_email import send_email
+from backend.schemas.recommendation import RecommendationResponse
 
 
 
@@ -127,21 +130,21 @@ def get_unseen_role_models(session: Session, user: User) -> list[RoleModel]:
     return  list(session.scalars(statement).unique().all())
 
 
-# returns the highest ranked role model not recomended to the user yet
-def generate_recommendation(session, user_id):
+# return a recommendation for a user
+def generate_recommendation(session: Session, user_id: int):
 
     user = session.get(User, user_id)
 
     if user is None:
         return None
 
-    # 1. Look for existing suitable RoleModels
+    # 1. Find unseen RoleModels relevant to the user
     candidates = get_unseen_role_models(
         session,
         user
     )
 
-    # 2. If there is a suitable existing one, use it
+    # 2. Select an existing RoleModel if possible
     if candidates:
         ranked = rank_role_models(
             session,
@@ -149,10 +152,18 @@ def generate_recommendation(session, user_id):
             candidates
         )
 
-        return select_role_model(ranked)
+        selected = select_role_model(ranked)
 
-    else:
+        if selected is None:
+            return None
+
+        role_model = get_role_model(
+            session,
+            selected["role_model_id"]
+        )
+
     # 3. Otherwise generate a new RoleModel
+    else:
         existing_people = get_role_model_names(session)
 
         role_model_profile = generate_new_role_model(
@@ -160,12 +171,12 @@ def generate_recommendation(session, user_id):
             existing_people
         )
 
-        # 4. Save it to database
         role_model = create_role_model(
             session,
             role_model_profile
         )
 
+    # 4. Create the Recommendation record
     recommendation = create_recommendation(
         session,
         user_id=user.id,
@@ -175,3 +186,48 @@ def generate_recommendation(session, user_id):
 
     return recommendation
 
+
+
+# send a recommendation
+def generate_and_send_recommendation(
+    session: Session,
+    user_id: int
+):
+
+    user = session.get(User, user_id)
+
+    if user is None:
+        return None
+
+    recommendation = generate_recommendation(
+        session,
+        user_id
+    )
+
+    if recommendation is None:
+        return None
+
+    role_model = get_role_model(
+        session,
+        recommendation.role_model_id
+    )
+
+    if role_model is None:
+        return None
+
+    response = curate_response(
+        user,
+        role_model
+    )
+
+    sent = send_email(
+        user.email,
+        response.subject,
+        response.body
+    )
+
+    return RecommendationResponse(
+        recommendation_id=recommendation.id,
+        role_model_id=recommendation.role_model_id,
+        email_sent=sent
+    )

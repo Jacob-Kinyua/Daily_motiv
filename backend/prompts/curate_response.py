@@ -1,28 +1,32 @@
 from .ai_client import generate_json
 from data.models import UserResponse
 
-def curate_response(user_profile, person):
+def curate_response(user, recommendation):
+
+    person = recommendation.role_model
+
     matching_lessons = [
         lesson
         for lesson in person.lessons
         if any(
-            tag in user_profile.interests
+            tag.name in user.interests
             for tag in lesson.tags
         )
     ]
+
     prompt = f"""
     You are writing a motivational email.
 
     User
 
     Occupation:
-    {user_profile.occupation}
+    {user.occupation}
 
     Goals:
-    {", ".join(user_profile.goals)}
+    {", ".join(user.goals)}
 
     Interests:
-    {", ".join(user_profile.interests)}
+    {", ".join(user.interests)}
 
     Featured Person
 
@@ -30,7 +34,7 @@ def curate_response(user_profile, person):
     {person.name}
 
     Why this person was selected:
-    {person.reason}
+    {recommendation.reason}
 
     Interesting Fact:
     {person.fun_fact}
@@ -39,10 +43,9 @@ def curate_response(user_profile, person):
     {matching_lessons}
 
     Book Recommendation:
-    {person.book_recommendation}
+    {person.book}
 
-
-    Requirements: 
+    Requirements:
 
     - Create an engaging subject line that is short and not promotional.
     - Write a friendly and motivational email body.
