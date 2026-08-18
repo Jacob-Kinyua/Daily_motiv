@@ -9,7 +9,7 @@ export default defineConfig({
     proxy: {
       // Adjust to match your Flask backend host/port during local dev
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://localhost:8000',
         changeOrigin: true,
       },
     },

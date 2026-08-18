@@ -10,7 +10,7 @@ export default function WelcomePage({ user, onViewRecommendations, onEdit, onUns
   return (
     <div className="page">
       <div className="masthead">
-        <span className="eyebrow">The Dossier</span>
+        <span className="eyebrow">Daily Inspiron</span>
       </div>
 
       <div className="tab-wrap">

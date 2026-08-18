@@ -38,11 +38,30 @@ export function createUser(payload) {
     });
 }
 
+export function getUser(userId) {
+  return request(`/users/${userId}`, {
+    method: "GET",
+  });
+}
+
 export function deleteUser(userId) {
     return request(`/users/${userId}`, {
         method: "DELETE",
     });
 }
+
+export function updateUser(userId) {
+  return request(`/users/${userId}`, {
+    method: "PUT",
+  });
+}
+
+export function unsubscribeUser(userId) {
+  return request(`/users/${userId}`, {
+    method: "DELETE",
+  });
+}
+
 
 
 // Recommendations
