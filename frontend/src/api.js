@@ -62,6 +62,12 @@ export function unsubscribeUser(userId) {
   });
 }
 
+export async function createRecommendation(userId) {
+  return request(`/recommendations/${userId}`, {
+    method: 'POST',
+  });
+}
+
 
 
 // Recommendations

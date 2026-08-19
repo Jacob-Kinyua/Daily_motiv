@@ -31,6 +31,8 @@ export default function App() {
   }, []);
 
   function handleSignedUp(newUser) {
+    console.log("USER RETURNED FROM BACKEND:", newUser);
+    
     localStorage.setItem(STORAGE_KEY, newUser.id);
     setUser(newUser);
     setEditMode(false);
