@@ -13,7 +13,7 @@ from backend.constansts.tags import AVAILABLE_TAGS
 from backend.prompts.find_person import choose_person
 from backend.prompts.research_person import research_person
 from backend.prompts.score_person import score_person
-from backend.data.models import RoleModelResponse
+from backend.schemas.role_model import RoleModelResponse
 from .role_model_service import get_role_model_names, create_role_model
 from backend.prompts.curate_response import curate_response
 from backend.services.generate_email import send_email
@@ -217,7 +217,7 @@ def generate_and_send_recommendation(
 
     response = curate_response(
         user,
-        role_model
+        recommendation
     )
 
     sent = send_email(

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from data.models import Lesson, BookRecommendation, TagScore
+from backend.data.models import Lesson, BookRecommendation, TagScore
 
 class RoleModelResponse(BaseModel):
     name: str

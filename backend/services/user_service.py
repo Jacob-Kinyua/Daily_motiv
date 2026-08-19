@@ -19,7 +19,7 @@ def create_user(session, user_profile):
     return user 
 
 
-def get_user_by_id(session, Session, user_id: int) -> User | None:
+def get_user_by_id(session: Session, user_id: int) -> User | None:
     statement = select(User).where(User.id == user_id)
 
     return session.scalars(statement).first()

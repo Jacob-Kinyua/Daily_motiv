@@ -31,13 +31,7 @@ class UserResponse(BaseModel):
     subject: str
     body: str
 
-class RoleModelResponse(BaseModel):
-    name: str
-    reason: str
-    fun_fact: str
-    lessons: list[Lesson]
-    book_recommendation: BookRecommendation
-    tag_scores: list[TagScore]
+
     
 
 

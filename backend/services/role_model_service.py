@@ -7,7 +7,7 @@ from backend.database.models.lesson_tag import LessonTag
 from backend.database.models.tag import Tag
 from backend.database.models.role_model_tag_score import RoleModelTagScore
 from backend.database.models.book import Book
-from backend.data.models import RoleModelResponse
+from backend.schemas.role_model import RoleModelResponse
 
 
 def get_or_create_tag(session: Session, tag_name: str) -> Tag:

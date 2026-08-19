@@ -34,5 +34,6 @@ class User(Base):
     interests: Mapped[list[str]] = mapped_column(JSON)
 
     recommendations: Mapped[list["Recommendation"]] = relationship(
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete-orphan"
     )

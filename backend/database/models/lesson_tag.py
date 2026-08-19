@@ -24,10 +24,4 @@ class LessonTag(Base):
         primary_key=True
     )
 
-    lesson: Mapped["Lesson"] = relationship(
-        back_populates="lesson_tags"
-    )
-
-    tag: Mapped["Tag"] = relationship(
-        back_populates="lesson_tags"
-    )
+    

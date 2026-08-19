@@ -17,6 +17,11 @@ class Tag(Base):
 
     name: Mapped[str] = mapped_column(String(100), unique=True, index=True)
 
-    lesson_tags: Mapped[list["LessonTag"]] = relationship(
+    lessons: Mapped[list["Lesson"]] = relationship(
+        secondary="lesson_tags",
+        back_populates="tags"
+    )
+
+    role_model_scores: Mapped[list["RoleModelTagScore"]] = relationship(
         back_populates="tag"
     )

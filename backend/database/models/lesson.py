@@ -28,6 +28,7 @@ class Lesson(Base):
         back_populates="lessons"
     )
 
-    lesson_tags: Mapped[list["LessonTag"]] = relationship(
-        back_populates="lesson"
+    tags: Mapped[list["Tag"]] = relationship(
+        secondary="lesson_tags",
+        back_populates="lessons"
     )

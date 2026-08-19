@@ -28,6 +28,6 @@ class Book(Base):
     )
 
     role_model: Mapped["RoleModel"] = relationship(
-        back_populates="book_recommendation"
+        back_populates="book"
     )
 
