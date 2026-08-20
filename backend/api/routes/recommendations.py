@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from backend.database.session import get_session
-from backend.schemas.recommendation import RecommendationResponse
+from backend.schemas.recommendation import RecommendationCreatedResponse, PastRecommendationResponse
 from backend.services.recommendation_service import generate_and_send_recommendation, get_user_recommendations
 from pydantic import BaseModel
 from datetime import datetime
@@ -24,7 +24,10 @@ router = APIRouter(
 
 
 # generate a recommendation and send it to the users email
-@router.post("/{user_id}")
+@router.post(
+    "/{user_id}",
+    response_model=RecommendationCreatedResponse
+)
 def create_recommendation(
     user_id: int,
     session: Session = Depends(get_session)
@@ -37,7 +40,7 @@ def create_recommendation(
 # fetch all users past recommendations
 @router.get(
     "/{user_id}",
-    response_model=list[RecommendationResponse]
+    response_model=list[PastRecommendationResponse]
 )
 def get_my_recommendations(
     user_id: int,

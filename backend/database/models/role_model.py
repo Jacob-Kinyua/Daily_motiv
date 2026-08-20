@@ -23,7 +23,7 @@ class RoleModel(Base):
         nullable=False
     )
 
-    fun_fact: Mapped[str] = mapped_column(String(200))
+    fun_fact: Mapped[str] = mapped_column(String(1000))
 
     # One RoleModel → many Lessons
     lessons: Mapped[list["Lesson"]] = relationship(

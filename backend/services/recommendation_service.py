@@ -17,7 +17,7 @@ from backend.schemas.role_model import RoleModelResponse
 from .role_model_service import get_role_model_names, create_role_model
 from backend.prompts.curate_response import curate_response
 from backend.services.generate_email import send_email
-from backend.schemas.recommendation import RecommendationResponse
+from backend.schemas.recommendation import RecommendationCreatedResponse, PastRecommendationResponse
 
 
 
@@ -37,15 +37,32 @@ def create_recommendation(session: Session, user_id: int, role_model_id: int, re
     return recommendation
 
 
-def get_user_recommendations(session: Session, user_id: int) -> list[Recommendation]:
-
+def get_user_recommendations(
+    session: Session,
+    user_id: int
+):
     statement = (
         select(Recommendation)
         .where(Recommendation.user_id == user_id)
         .order_by(desc(Recommendation.recommended_at))
     )
 
-    return list(session.scalars(statement).all())
+    recommendations = list(session.scalars(statement).all())
+
+    return [
+        PastRecommendationResponse(
+            id=rec.id,
+            person_name=rec.role_model.name,
+            person_title=None,
+            sent_at=rec.recommended_at,
+            fun_fact=rec.role_model.fun_fact,
+            lessons=[
+                lesson.lesson
+                for lesson in rec.role_model.lessons
+            ],
+        )
+        for rec in recommendations
+    ]
 
 
 def generate_new_role_model(user, existing_people):
@@ -226,7 +243,7 @@ def generate_and_send_recommendation(
         response.body
     )
 
-    return RecommendationResponse(
+    return RecommendationCreatedResponse(
         recommendation_id=recommendation.id,
         role_model_id=recommendation.role_model_id,
         email_sent=sent
