@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
+from fastapi.responses import JSONResponse
 
+from backend.services.security import create_access_token, get_current_user
 from backend.database.session import get_session
 from backend.schemas.auth import LoginRequest, VerifyCodeRequest
 from backend.services.auth_service import (
     request_login_code,
     verify_login_code
 )
+
 
 router = APIRouter(
     prefix="/auth",
@@ -55,7 +58,32 @@ def verify_code(
             detail="Invalid or expired verification code"
         )
 
-    return {
-        "message": "Login successful",
-        "user_id": user.id
-    }
+    access_token = create_access_token(user.id)
+
+    response = JSONResponse(
+        content={
+            "message": "Login successful",
+            "user_id": user.id
+        }
+    )
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,      # True when using HTTPS in production
+        samesite="lax",
+        max_age=60 * 60
+    )
+
+    return response
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(
+        key="access_token",
+        httponly=True,
+        samesite="lax",
+    )
+
+    return {"message": "Logged out successfully"}

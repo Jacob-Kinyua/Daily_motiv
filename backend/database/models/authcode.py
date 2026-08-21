@@ -16,7 +16,7 @@ class AuthCode(Base):
     )
 
     user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"),
+        ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False
     )
 
@@ -26,7 +26,7 @@ class AuthCode(Base):
     )
 
     expires_at: Mapped[datetime] = mapped_column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False
     )
 
@@ -35,4 +35,4 @@ class AuthCode(Base):
         nullable=False
     )
 
-    user: Mapped["User"] = relationship()
+    user: Mapped["User"] = relationship("User", back_populates="auth_codes")

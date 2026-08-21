@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Optional
 
 
 class UserCreate(BaseModel):
@@ -20,3 +21,13 @@ class UserResponse(BaseModel):
     interests: list[str]
 
     model_config = ConfigDict(from_attributes=True)
+
+
+
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    occupation: Optional[str] = None
+    goals: Optional[list[str]] = None
+    career_stage: Optional[str] = None
+    interests: Optional[list[str]] = None

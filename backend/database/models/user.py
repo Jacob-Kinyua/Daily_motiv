@@ -37,3 +37,9 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+
+    auth_codes = relationship(
+        "AuthCode",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )

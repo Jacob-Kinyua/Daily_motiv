@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from backend.database.models.user import User
+from backend.schemas.user import UserUpdate
 
 def create_user(session, user_profile):
     user = User(
@@ -30,12 +31,14 @@ def get_user_by_email(session: Session, email: str) -> User | None:
 
     return session.scalars(statement).first()
 
-def update_user(session: Session, user_id: int, **updates) -> User | None:
+def update_user(session: Session, user_id: int, user_data: UserUpdate) -> User | None:
 
     user = session.get(User, user_id)
 
     if user is None:
         return None
+
+    updates = user_data.model_dump(exclude_unset=True)
 
     for field, value in updates.items():
         setattr(user, field, value)
