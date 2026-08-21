@@ -15,6 +15,7 @@ export default function SignupForm({
   initialValues,
   onComplete,
   onCancelEdit,
+  onGoToLogin
 }) {
   const isEditing = Boolean(initialValues);
 
@@ -120,9 +121,7 @@ export default function SignupForm({
     try {
       const payload = {
         name: form.name.trim(),
-
         email: form.email.trim(),
-
         occupation: form.occupation.trim(),
 
         goals: form.goals
@@ -131,19 +130,19 @@ export default function SignupForm({
           .filter(Boolean),
 
         career_stage: form.career_stage,
-
         interests: form.interests,
       };
 
       const result = isEditing
-        ? await updateUser(initialValues.id, payload)
+        ? await updateUser(payload)
         : await createUser(payload);
 
       onComplete(result);
+
     } catch (err) {
       setSubmitError(
         err.message ||
-          'Something went wrong filing your record. Try again.'
+        'Something went wrong filing your record. Try again.'
       );
     } finally {
       setSubmitting(false);
@@ -416,6 +415,18 @@ export default function SignupForm({
             )}
           </div>
 
+          {!isEditing && (
+            <p className="auth-switch">
+              Already have an account?{' '}
+              <button
+                type="button"
+                onClick={onGoToLogin}
+                disabled={submitting}
+              >
+                Log in
+              </button>
+            </p>
+          )}
         </form>
       </div>
     </div>

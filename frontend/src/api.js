@@ -1,11 +1,15 @@
 const BASE_URL = "http://localhost:8000";
 
 async function request(path, options = {}) {
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+    };
+
     const res = await fetch(`${BASE_URL}${path}`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
         ...options,
+        headers,
+        credentials: "include",
     });
 
     if (!res.ok) {
@@ -29,6 +33,26 @@ async function request(path, options = {}) {
 }
 
 
+// Authentication
+
+export function login(email) {
+    return request("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+    });
+}
+
+export function verifyCode(email, code) {
+    return request("/auth/verify", {
+        method: "POST",
+        body: JSON.stringify({
+            email,
+            code,
+        }),
+    });
+}
+
+
 // Users
 
 export function createUser(payload) {
@@ -38,46 +62,42 @@ export function createUser(payload) {
     });
 }
 
-export function getUser(userId) {
-  return request(`/users/${userId}`, {
-    method: "GET",
-  });
+export function getCurrentUser() {
+    return request("/users/me", {
+        method: "GET",
+    });
 }
 
-export function deleteUser(userId) {
-    return request(`/users/${userId}`, {
+export function updateUser(payload) {
+    return request("/users/me", {
+        method: "PUT",
+        body: JSON.stringify(payload),
+    });
+}
+
+export function deleteUser() {
+    return request("/users/me", {
         method: "DELETE",
     });
 }
 
-export function updateUser(userId) {
-  return request(`/users/${userId}`, {
-    method: "PUT",
-  });
-}
-
-export function unsubscribeUser(userId) {
-  return request(`/users/${userId}`, {
-    method: "DELETE",
-  });
-}
-
-export async function createRecommendation(userId) {
-  return request(`/recommendations/${userId}`, {
-    method: 'POST',
-  });
-}
-
-
 
 // Recommendations
 
-export function generateAndSendRecommendation(userId) {
-    return request(`/recommendations/${userId}`, {
+export function generateAndSendRecommendation() {
+    return request("/recommendations/me", {
         method: "POST",
     });
 }
 
-export function getRecommendations(userId) {
-    return request(`/recommendations/${userId}`);
+export function getRecommendations() {
+    return request("/recommendations/me", {
+        method: "GET",
+    });
+}
+
+export function logout() {
+    return request("/auth/logout", {
+        method: "POST",
+    });
 }

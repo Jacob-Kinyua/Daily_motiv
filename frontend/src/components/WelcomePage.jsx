@@ -9,6 +9,7 @@ export default function WelcomePage({
   onViewRecommendations,
   onEdit,
   onUnsubscribe,
+  onLogout,
 }) {
   const firstName =
     (user.name || '').split(' ')[0] || user.name;
@@ -27,7 +28,7 @@ export default function WelcomePage({
         <h1>Hello, {firstName}.</h1>
 
         <p>
-          Your file is active. Here’s what we have on record
+          Your file is active. Here's what we have on record
           and what your upcoming recommendations will be based on.
         </p>
       </div>
@@ -111,6 +112,13 @@ export default function WelcomePage({
             onClick={onUnsubscribe}
           >
             Unsubscribe
+          </button>
+
+          <button
+            className="btn btn-secondary"
+            onClick={onLogout}
+          >
+            Log out
           </button>
         </div>
       </div>

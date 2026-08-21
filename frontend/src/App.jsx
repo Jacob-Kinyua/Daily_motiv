@@ -1,42 +1,45 @@
 import { useEffect, useState } from 'react';
+
 import SignupForm from './components/SignupForm.jsx';
+import LoginPage from './components/LoginPage.jsx';
 import WelcomePage from './components/WelcomePage.jsx';
 import PastRecommendations from './components/PastRecommendations.jsx';
 import UnsubscribeModal from './components/UnsubscribeModal.jsx';
-import { getUser } from './api.js';
 
-const STORAGE_KEY = 'dossier_user_id';
+import { getCurrentUser, logout } from './api.js';
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [view, setView] = useState('loading'); // loading | signup | welcome | recommendations
+  const [view, setView] = useState('loading');
   const [showUnsubscribe, setShowUnsubscribe] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    const storedId = localStorage.getItem(STORAGE_KEY);
-    if (!storedId) {
-      setView('signup');
-      return;
-    }
-    getUser(storedId)
-      .then((u) => {
-        setUser(u);
-        setView('welcome');
-      })
-      .catch(() => {
-        localStorage.removeItem(STORAGE_KEY);
-        setView('signup');
-      });
+    checkSession();
   }, []);
 
-  function handleSignedUp(newUser) {
-    console.log("USER RETURNED FROM BACKEND:", newUser);
-    
-    localStorage.setItem(STORAGE_KEY, newUser.id);
-    setUser(newUser);
-    setEditMode(false);
-    setView('welcome');
+  async function checkSession() {
+    try {
+      const currentUser = await getCurrentUser();
+
+      setUser(currentUser);
+      setView('welcome');
+    } catch {
+      setUser(null);
+      setView('login');
+    }
+  }
+
+  async function handleLoggedIn() {
+    try {
+      const currentUser = await getCurrentUser();
+
+      setUser(currentUser);
+      setView('welcome');
+    } catch {
+      setUser(null);
+      setView('login');
+    }
   }
 
   function handleUpdated(updatedUser) {
@@ -45,26 +48,46 @@ export default function App() {
     setView('welcome');
   }
 
-  function handleUnsubscribed() {
-    localStorage.removeItem(STORAGE_KEY);
+  async function handleUnsubscribed() {
+    await logout();
+
     setShowUnsubscribe(false);
     setUser(null);
-    setView('signup');
+    setView('login');
+  }
+
+  async function handleLogout() {
+    await logout();
+
+    setUser(null);
+    setView('login');
   }
 
   return (
     <div className="app-shell">
+
       {view === 'loading' && (
         <div className="loading-screen">
-          <p className="eyebrow">Retrieving your file…</p>
+          <p className="eyebrow">Checking your session…</p>
         </div>
+      )}
+
+      {view === 'login' && (
+        <LoginPage
+          onLogin={handleLoggedIn}
+          onSignup={() => setView('signup')}
+        />
       )}
 
       {view === 'signup' && (
         <SignupForm
           initialValues={editMode ? user : null}
-          onComplete={editMode ? handleUpdated : handleSignedUp}
-          onCancelEdit={editMode ? () => setView('welcome') : null}
+          onComplete={editMode ? handleUpdated : handleLoggedIn}
+          onCancelEdit={
+            editMode
+              ? () => setView('welcome')
+              : () => setView('login')
+          }
         />
       )}
 
@@ -77,11 +100,15 @@ export default function App() {
             setView('signup');
           }}
           onUnsubscribe={() => setShowUnsubscribe(true)}
+          onLogout={handleLogout}
         />
       )}
 
       {view === 'recommendations' && user && (
-        <PastRecommendations user={user} onBack={() => setView('welcome')} />
+        <PastRecommendations
+          user={user}
+          onBack={() => setView('welcome')}
+        />
       )}
 
       {showUnsubscribe && user && (
@@ -91,8 +118,7 @@ export default function App() {
           onConfirmed={handleUnsubscribed}
         />
       )}
+
     </div>
   );
 }
-
-

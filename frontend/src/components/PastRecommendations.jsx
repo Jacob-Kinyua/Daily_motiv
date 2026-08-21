@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+
 import {
   getRecommendations,
-  createRecommendation,
+  generateAndSendRecommendation,
 } from '../api.js';
 
 function formatDate(value) {
@@ -16,7 +17,7 @@ function formatDate(value) {
   }
 }
 
-export default function PastRecommendations({ user, onBack }) {
+export default function PastRecommendations({ onBack }) {
   const [recs, setRecs] = useState(null);
   const [error, setError] = useState('');
   const [generating, setGenerating] = useState(false);
@@ -25,9 +26,11 @@ export default function PastRecommendations({ user, onBack }) {
   useEffect(() => {
     let cancelled = false;
 
-    getRecommendations(user.id)
+    getRecommendations()
       .then((data) => {
-        if (!cancelled) setRecs(data);
+        if (!cancelled) {
+          setRecs(data);
+        }
       })
       .catch((err) => {
         if (!cancelled) {
@@ -41,7 +44,7 @@ export default function PastRecommendations({ user, onBack }) {
     return () => {
       cancelled = true;
     };
-  }, [user.id]);
+  }, []);
 
   async function handleFirstRecommendation() {
     setGenerating(true);
@@ -49,7 +52,7 @@ export default function PastRecommendations({ user, onBack }) {
     setError('');
 
     try {
-      const result = await createRecommendation(user.id);
+      const result = await generateAndSendRecommendation();
 
       console.log('Recommendation generated:', result);
 
@@ -57,8 +60,7 @@ export default function PastRecommendations({ user, onBack }) {
         'Your first recommendation has been generated and sent to your email.'
       );
 
-      // Reload recommendations so the new one appears on the page
-      const updatedRecs = await getRecommendations(user.id);
+      const updatedRecs = await getRecommendations();
       setRecs(updatedRecs);
 
     } catch (err) {
