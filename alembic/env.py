@@ -13,6 +13,8 @@ from backend.database.models.lesson_tag import LessonTag
 from backend.database.models.role_model_tag_score import RoleModelTagScore
 from backend.database.models.recommendation import Recommendation
 from backend.database.models.book import Book
+from backend.database.models.authcode import AuthCode
+
 import os
 from dotenv import load_dotenv
 
