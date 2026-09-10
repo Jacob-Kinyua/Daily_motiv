@@ -54,8 +54,6 @@ export default function PastRecommendations({ onBack }) {
     try {
       const result = await generateAndSendRecommendation();
 
-      console.log('Recommendation generated:', result);
-
       setEmailMessage(
         'Your first recommendation has been generated and sent to your email.'
       );
