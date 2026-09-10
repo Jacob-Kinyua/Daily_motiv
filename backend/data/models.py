@@ -29,8 +29,14 @@ class ScoreResponse(BaseModel):
 
 class UserResponse(BaseModel):
     subject: str
-    body: str
-
+    greeting: str
+    relevance: str
+    interesting_fact: str
+    lessons: list[str]
+    book_title: str
+    book_author: str
+    book_recommendation: str
+    closing: str
 
     
 

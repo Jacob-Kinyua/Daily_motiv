@@ -237,10 +237,33 @@ def generate_and_send_recommendation(
         recommendation
     )
 
+    body = f"""
+    {response.greeting}
+
+    {response.relevance}
+
+    INTERESTING FACT
+
+    {response.interesting_fact}
+
+    TODAY'S LESSONS
+
+    {chr(10).join(f"• {lesson}" for lesson in response.lessons)}
+
+    BOOK RECOMMENDATION
+    {response.book_title}
+    by {response.book_author}
+
+    {response.book_recommendation}
+
+    CLOSING REMARKS
+    {response.closing}
+    """
+
     sent = send_email(
         user.email,
         response.subject,
-        response.body
+        body
     )
 
     return RecommendationCreatedResponse(
