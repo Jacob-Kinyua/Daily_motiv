@@ -71,8 +71,8 @@ def verify_code(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=False,      # True when using HTTPS in production
-        samesite="lax",
+        secure=True,
+        samesite="none",
         max_age=60 * 60
     )
 
